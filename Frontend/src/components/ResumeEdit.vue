@@ -1655,6 +1655,7 @@
   <script>
   import html2pdf from "html2pdf.js";
   import ResumeService from '@/services/ResumeService'
+  import router from '../router'
   import { CohereClient } from "cohere-ai"
   export default {
       data: () => ({
@@ -1670,6 +1671,7 @@
 
         jobdescription: "",
         jobtitle: "",
+        resumeID: null,
 
         fullName: "",
         email: "",
@@ -1758,33 +1760,135 @@
         resumeDetails: null,
         showTemplate: false,
         resumeTitle: "",
-
         matchScore: "0"
       }),
   
       methods: {
         onLoad(){
-          this.fullName = sessionStorage.getItem('UserName')
-          this.location = sessionStorage.getItem('UserLocation')
-          this.phoneNumber = sessionStorage.getItem('UserPhoneNumber')
-          this.email = sessionStorage.getItem('UserEmail')
-          this.linkedinURL = sessionStorage.getItem('UserLinkedinURL')
-          this.websiteURL = sessionStorage.getItem('UserWebsiteURL')
-          
-          this.resumeDetails = {
-            fullName: this.fullName,
-            location: this.location,
-            phoneNumber: this.phoneNumber,
-            email: this.email,
-            websiteURL: this.websiteURL,
-            linkedinURL: this.linkedinURL,
-            professionalSummary: this.professionalSummary,
-            educationDetails: this.selectedEducationDetails,
-            experienceDetails: this.selectedExperienceDetails,
-            skills: this.selectedSkills,
-            jobdescription: this.jobdescription,
-            jobtitle: this.jobtitle
-          }
+           if(this.$store.state.resumeDetails != null){
+
+                var stateResume = this.$store.state.resumeDetails
+
+                stateResume.EducationDetails.forEach(eduElement => {
+                    eduElement.Awards.forEach(awardElement => {
+                        this.awards.push(awardElement.description)
+                    });
+                    eduElement.Courses.forEach(courseElement => {
+                        this.courses.push(courseElement.description)
+                    });
+                    this.selectedEducationDetails.push({
+                        instituteName: eduElement.instituteName,
+                        degree: eduElement.degree,
+                        location: eduElement.location,
+                        major: eduElement.major,
+                        startDate: eduElement.startDate,
+                        endDate: eduElement.endDate,
+                        gpa: eduElement.gpa,
+                        awards: this.awards,
+                        courses: this.courses
+                    }) 
+                    this.awards = []
+                    this.courses = []
+                });
+
+                stateResume.ExperienceDetails.forEach(expElement => {
+                    expElement.ExperienceNotes.forEach(expnoteElement => {
+                        this.experienceNote.push(expnoteElement.description)
+                    });
+                    this.selectedExperienceDetails.push({
+                        orgName: expElement.orgName,
+                        roleName: expElement.roleName,
+                        location: expElement.location,
+                        startDate: expElement.startDate,
+                        endDate: expElement.endDate,
+                        experienceNotes: this.experienceNote
+                    }) 
+                    this.experienceNote = []
+                });
+
+                stateResume.Leaderships.forEach(leaderElement => {
+                    leaderElement.LeadershipNotes.forEach(leadernoteElement => {
+                        this.leadershipNotes.push(leadernoteElement.description)
+                    });
+                    this.selectedLeadership.push({
+                        orgName: leaderElement.orgName,
+                        startDate: leaderElement.startDate,
+                        endDate: leaderElement.endDate,
+                        leadershipPosition: leaderElement.leadershipPosition,
+                        leadershipNotes: this.leadershipNotes
+                    }) 
+                    this.leadershipNotes = []
+                });
+
+                stateResume.Honors.forEach(honorElement => {
+                    honorElement.HonorNotes.forEach(honorNoteElement => {
+                        this.honorNotes.push(honorNoteElement.description)
+                    });
+                    this.selectedHonors.push({
+                        name: honorElement.name,
+                        honorOrg: honorElement.honorOrg,
+                        startDate: honorElement.startDate,
+                        endDate: honorElement.endDate,
+                        honorNotes: this.honorNotes
+                    }) 
+                    this.honorNotes = []
+                });
+
+                stateResume.ProjectDetails.forEach(projectElement => {
+                    projectElement.ProjectNotes.forEach(projectnoteElement => {
+                        this.projectNotes.push(projectnoteElement.description)
+                    });
+                    this.selectedProjects.push({
+                        orgName: projectElement.orgName,
+                        location: projectElement.location,
+                        projectName: projectElement.projectName,
+                        startDate: projectElement.startDate,
+                        endDate: projectElement.endDate,
+                        projectNotes: this.projectNotes
+                    }) 
+                    this.projectNotes = []
+                });
+
+                stateResume.Skills.forEach(skillElement => {
+                    this.selectedSkills.push({
+                        name: skillElement.Name,
+                        level: skillElement.level
+                    }) 
+                });
+
+                this.professionalSummary = stateResume.professionalSummary
+                this.jobdescription = stateResume.jobDescription
+                this.jobtitle = stateResume.jobTitle
+                this.resumeID = stateResume.ResumeId
+                this.tempalte = stateResume.templaterType
+                this.resumeTitle = stateResume.resumeTitle
+                this.matchScore = stateResume.matchScore
+
+                this.fullName = sessionStorage.getItem('UserName')
+                this.location = sessionStorage.getItem('UserLocation')
+                this.phoneNumber = sessionStorage.getItem('UserPhoneNumber')
+                this.email = sessionStorage.getItem('UserEmail')
+                this.linkedinURL = sessionStorage.getItem('UserLinkedinURL')
+                this.websiteURL = sessionStorage.getItem('UserWebsiteURL')
+               
+                this.resumeDetails = {
+                   fullName: this.fullName,
+                   location: this.location,
+                   phoneNumber: this.phoneNumber,
+                   email: this.email,
+                   websiteURL: this.websiteURL,
+                   linkedinURL: this.linkedinURL,
+                   professionalSummary: this.professionalSummary,
+                   educationDetails: this.selectedEducationDetails,
+                   experienceDetails: this.selectedExperienceDetails,
+                   skills: this.selectedSkills,
+                   jobdescription: this.jobdescription,
+                   jobtitle: this.jobtitle
+                }
+            }
+            else{
+              router.push('/resume')
+            }
         },
         clearFields(){
              
@@ -2128,8 +2232,12 @@
         async saveOnClick() {
             try{
               this.setLoadingOverLay(true, "Please wait. Resume is being saved...")
-              await ResumeService.saveResume({
+              await ResumeService.saveResumeVersion({
+                resumeID: this.resumeID,
                 resumeTitle: this.resumeTitle,
+                jobDescription: this.jobdescription,
+                jobTitle: this.jobtitle,
+                matchScore: this.matchScore,
                 UserID: sessionStorage.getItem('UserId'),
                 fullName: this.resumeDetails.fullName,
                 location: this.resumeDetails.location, 
@@ -2143,14 +2251,13 @@
                 skills: this.resumeDetails.skills,
                 leadershipDetails: this.resumeDetails.leadershipDetails,
                 honorDetails: this.resumeDetails.honorDetails,
-                jobDescription: this.jobdescription,
-                jobTitle: this.jobtitle,
-                matchScore: this.matchScore
               }).then((response)=> {
                 console.log(response.statusText)
                 if(response.statusText == "OK"){
                     if(response.data.status == "OK"){
                         this.showSnackBar("Resume Saved.")
+                        this.setLoadingOverLay(false, "")
+                        router.push('/resume')
                     }
                     else{
                         this.showSnackBar(response.data.error)
@@ -2165,24 +2272,7 @@
           }
         },
 
-        exportToPDF() {
-          this.opt.filename = this.resumeTitle != "" ? this.resumeTitle + ".pdf" : "myresume.pdf"
-          var currentTemplate = ""
-          switch(this.tempalte){
-            case "Template 1": currentTemplate = "template1ResumePDF" 
-            break;
-            case "Template 2": currentTemplate = "template2ResumePDF" 
-            break;
-            case "Template 3": currentTemplate = "template3ResumePDF" 
-            break;
-            case "Template 4": currentTemplate = "template4ResumePDF" 
-            break;
-            default: currentTemplate = "template1ResumePDF" 
-            break; 
-          }
-          html2pdf().set(this.opt).from(document.getElementById(currentTemplate)).save()
-        },
-
+        
         async getMatchScore(){
           var resumeRequest = ""
           switch(this.tempalte){
@@ -2329,7 +2419,7 @@
               else{
                 return
               }
-
+              
               if(this.resumeDetails.skills != null && this.resumeDetails.skills.length > 0){
                 resumeRequest = resumeRequest + " SKILLS "
                 this.resumeDetails.skills.forEach(skill => {
@@ -2367,6 +2457,24 @@
             console.log(err)
             this.setLoadingOverLay(false, "")
           } 
+        },
+
+        exportToPDF() {
+          this.opt.filename = this.resumeTitle != "" ? this.resumeTitle + ".pdf" : "myresume.pdf"
+          var currentTemplate = ""
+          switch(this.tempalte){
+            case "Template 1": currentTemplate = "template1ResumePDF" 
+            break;
+            case "Template 2": currentTemplate = "template2ResumePDF" 
+            break;
+            case "Template 3": currentTemplate = "template3ResumePDF" 
+            break;
+            case "Template 4": currentTemplate = "template4ResumePDF" 
+            break;
+            default: currentTemplate = "template1ResumePDF" 
+            break; 
+          }
+          html2pdf().set(this.opt).from(document.getElementById(currentTemplate)).save()
         }
       },
       watch: {
