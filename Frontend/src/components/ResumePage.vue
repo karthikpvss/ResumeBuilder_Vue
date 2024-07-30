@@ -21,7 +21,7 @@
           :key="2"
           :value="2"
         >
-          
+          <AllResumes/>
         </v-window-item>
       </v-window>
     </v-card>
@@ -30,8 +30,9 @@
   <script>
     //import { CohereClient } from "cohere-ai";
     import ResumeBuilder from './ResumeBuilder.vue'
+    import AllResumes from './AllResumes.vue'
     export default {
-    components: { ResumeBuilder},
+    components: { ResumeBuilder, AllResumes},
       data: () => ({
         tab: null,
       }),

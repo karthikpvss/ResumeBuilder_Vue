@@ -120,6 +120,7 @@ import AuthenticationService from '@/services/UserAuthenticationService'
           }).then((response)=> {
                 console.log(response.statusText)
                 if(response.statusText == "OK"){
+
                   this.$store.commit('setUserId', response.data.email)
                   this.$store.commit('setUserName', response.data.firstName + " " + response.data.lastName)
                   this.$store.commit('setPermission', response.data.permission)
@@ -129,13 +130,22 @@ import AuthenticationService from '@/services/UserAuthenticationService'
                   sessionStorage.setItem('UserEmail', response.data.email)
                   sessionStorage.setItem('UserName', response.data.firstName + " " + response.data.lastName)
                   sessionStorage.setItem('UserPermission', response.data.permission)
+                  sessionStorage.setItem('UserPhoneNumber', response.data.phoneNumber)
+                  sessionStorage.setItem('UserLocation', response.data.location)
+                  sessionStorage.setItem('UserWebsiteURL', response.data.websiteURL)
+                  sessionStorage.setItem('UserLinkedinURL', response.data.linkedinURL)
                   sessionStorage.setItem('IsUserLoggedIn', true)
                   sessionStorage.setItem('sessionId', response.data.sessionId)
+                  
                   console.log(sessionStorage.getItem('UserId'))
                   console.log(sessionStorage.getItem('UserEmail'))
                   console.log(sessionStorage.getItem('UserName'))
                   console.log(sessionStorage.getItem('UserPermission'))
                   console.log(sessionStorage.getItem('IsUserLoggedIn'))
+                  console.log(sessionStorage.getItem('UserLocation'))
+                  console.log(sessionStorage.getItem('UserPhoneNumber'))
+                  console.log(sessionStorage.getItem('UserWebsiteURL'))
+                  console.log(sessionStorage.getItem('UserLinkedinURL'))
                   console.log(sessionStorage.getItem('sessionId'))
                   //this.clearFields() 
                   this.snackbar = true

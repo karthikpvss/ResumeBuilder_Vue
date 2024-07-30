@@ -3,14 +3,14 @@
   <v-sheet
     class="pa-4 text-center mx-auto"
     elevation="12"
-    max-width="600"
+    max-width="1000"
     rounded="lg"
     width="100%"
   >
     <h1 class="text-center">Register</h1>
 
     <v-container>
-      <v-card class="mx-auto" max-width="500" elevation="0">
+      <v-card class="mx-auto" max-width="900" elevation="0">
         <v-form
           v-model="form"
           @submit.prevent="onSubmit"
@@ -54,7 +54,7 @@
           </v-row>
 
           <v-row>
-            <v-col cols="12">
+            <v-col cols="6">
               <v-text-field
                 v-model="password"
                 :readonly="loading"
@@ -68,10 +68,7 @@
                 @click:append="show1 = !show1"
               ></v-text-field>
             </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col cols="12">
+            <v-col cols="6">
               <v-text-field
                 v-model="passwordConfirm"
                 :readonly="loading"
@@ -116,6 +113,28 @@
                 class="mb-2"
                 clearable
                 label="Location"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                v-model="linkedinURL"
+                :readonly="loading"
+                class="mb-2"
+                clearable
+                label="Linkedin URL"
+              ></v-text-field>
+            </v-col>
+            
+            <v-col cols="6">
+              <v-text-field
+                v-model="websiteURL"
+                :readonly="loading"
+                class="mb-2"
+                clearable
+                label="Website URL"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -176,6 +195,8 @@ import AuthenticationService from '@/services/UserAuthenticationService'
       passwordConfirm: null,
       phoneNumber: null,
       location: null,
+      websiteURL: null,
+      linkedinURL: null,
       gender: null,
       genderItem: ['Male','Female','Other'],
       loading: false,
@@ -233,7 +254,10 @@ import AuthenticationService from '@/services/UserAuthenticationService'
               gender: this.gender,
               password: this.password,
               permission: "User",
-              location: this.location
+              location: this.location,
+              linkedinURL: this.linkedinURL,
+              websiteURL: this.websiteURL,
+
           }).then((response)=> {
                 console.log(response)
                 if(response.statusText == "OK"){

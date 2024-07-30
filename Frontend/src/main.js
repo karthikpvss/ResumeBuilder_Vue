@@ -22,7 +22,7 @@ const store = createStore({
         username: "",
         permission: "",
         isUserLoggedIn: false,
-        storyDetails: null,
+        resumeDetails: null,
       }
     },
     mutations: {
@@ -38,11 +38,11 @@ const store = createStore({
       setIsUserLoggedIn (state, isUserLoggedIn){
         state.isUserLoggedIn = isUserLoggedIn
       },
-      setStoryDetails (state, storyDetails){
-        state.storyDetails = storyDetails
+      setResumeDetails (state, resumeDetails){
+        state.resumeDetails = resumeDetails
       },
-      getStoryDetails (state){
-        return state.storyDetails
+      getresumeDetails (state){
+        return state.resumeDetails
       }
     }
   })

@@ -8,10 +8,10 @@ export default{
         return Api().get('/resumes/' + userID)
     },
     saveResumeVersion (request){
-        return Api().post('/resumeVersion', request)
+        return Api().put('/saveResumeVersion', request)
     },
     deleteResumeVersion (id){
-        return Api().delete('/ResumeVersion/' + id)
+        return Api().delete('/resume/' + id)
     }
 }
 
