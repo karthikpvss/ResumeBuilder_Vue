@@ -153,7 +153,7 @@ import AuthenticationService from '@/services/UserAuthenticationService'
                     setTimeout(() => (router.push('/admin')), 800)
                   }
                   else{
-                    setTimeout(() => (router.push('/')), 800)
+                    setTimeout(() => (router.push('/resume')), 800)
                   }
                 }
               }
