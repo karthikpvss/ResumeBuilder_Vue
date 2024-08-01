@@ -3,12 +3,12 @@ const path = require('path')
 module.exports = {
   port: process.env.PORT || 8081,
   db: {
-    database: process.env.DB_NAME || 'travelproject1',
-    user: process.env.DB_USER || 'travelproject1',
-    password: process.env.DB_PASS || 'travelproject1',
+    database: process.env.DB_NAME || 'ResumeBuilder',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASS || 'root',
     options: {
       dialect: process.env.DIALECT || 'mysql',
-      host: process.env.HOST || 'db4free.net'
+      host: process.env.HOST || 'localhost'
     }
   }
 }

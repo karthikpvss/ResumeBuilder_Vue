@@ -21,7 +21,7 @@
               <v-btn
                 prepend-icon="mdi-typewriter"
                 @click="resume"
-                v-show="this.$store.state.isUserLoggedIn"
+                v-show="this.$store.state.isUserLoggedIn && this.$store.state.permission == 'User'"
               >
                 <template v-slot:prepend>
                   <v-icon color="#fff"></v-icon>

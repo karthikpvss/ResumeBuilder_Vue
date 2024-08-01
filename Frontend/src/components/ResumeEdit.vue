@@ -600,6 +600,14 @@
         </template>
       
         <template v-slot:item.7>
+          <v-alert
+            variant="outlined"
+            type="warning"
+            prominent
+            border="top"
+          >
+            Skill level is mandatory for Template 1
+          </v-alert>
           <v-card title="Skills" flat>
             <br/>
             <v-row class="ml-3 mb-3">
